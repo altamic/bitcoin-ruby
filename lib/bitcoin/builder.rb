@@ -69,12 +69,12 @@ module Bitcoin
       # create the block according to values specified via DSL.
       def block target
         @block.ver = @version || 1
-        @block.prev_block = [@prev_block].pack("H*").reverse
+        @block.prev_block = @prev_block.htb_reverse
         @block.mrkl_root = @mrkl_root
         @block.time = Time.now.to_i
         @block.nonce = 0
-        @block.mrkl_root = [Bitcoin.hash_mrkl_tree(@block.tx.map {|t|
-              t.hash }).last].pack("H*").reverse
+        @block.mrkl_root = Bitcoin.hash_mrkl_tree(@block.tx.map {|t|
+              t.hash }).last.htb_reverse
         find_hash(target)
         Bitcoin::P::Block.new(@block.to_payload)
       end

@@ -63,7 +63,7 @@ module Bitcoin::Storage::Backends
     end
 
     def get_block_by_prev_hash(hash)
-      wrap_block(@blk.find {|blk| blk.prev_block == [hash].pack("H*").reverse})
+      wrap_block(@blk.find {|blk| blk.prev_block == hash.htb_reverse})
     end
 
     def get_block(blk_hash)
@@ -90,7 +90,7 @@ module Bitcoin::Storage::Backends
 
     def get_txin_for_txout(tx_hash, txout_idx)
       txin = @tx.values.map(&:in).flatten.find {|i| i.prev_out_index == txout_idx &&
-        i.prev_out == [tx_hash].pack("H*").reverse }
+        i.prev_out == tx_hash.htb_reverse }
       wrap_txin(txin)
     end
 

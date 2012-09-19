@@ -83,7 +83,7 @@ describe "block rules" do
     block = create_block(@block1.hash, false, [], @key)
     block.tx << tx1; block.tx << tx2
     block.bits = Bitcoin.encode_compact_bits("f"*64)
-    block.mrkl_root = [Bitcoin.hash_mrkl_tree(block.tx.map(&:hash)).last].pack("H*").reverse
+    block.mrkl_root = Bitcoin.hash_mrkl_tree(block.tx.map(&:hash)).last.htb_reverse
     block.recalc_block_hash
     @store.store_block(block).should == [2, 0]
   end
