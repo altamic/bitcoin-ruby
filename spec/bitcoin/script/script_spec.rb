@@ -32,11 +32,11 @@ describe 'Bitcoin::Script' do
 
     it 'Script#binary_from_string' do
       str = Script.new(SCRIPT[0]).to_string
-      Script.binary_from_string(str).unpack("H*")[0].should == SCRIPT[0].unpack("H*")[0]
+      Script.binary_from_string(str).hth.should == SCRIPT[0].hth
       Script.new(Script.binary_from_string(str)).to_string.should == str
 
       str = Script.new(SCRIPT[1]).to_string
-      Script.binary_from_string(str).unpack("H*")[0].should == SCRIPT[1].unpack("H*")[0]
+      Script.binary_from_string(str).hth.should == SCRIPT[1].hth
       Script.new(Script.binary_from_string(str)).to_string.should == str
       # TODO make tests for OP_PUSHDATA1, OP_PUSHDATA2, OP_PUSHDATA4 cases
 

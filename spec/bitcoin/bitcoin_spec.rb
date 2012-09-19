@@ -388,7 +388,7 @@ describe 'Bitcoin Address/Hash160/PubKey' do
             "1111111111"
           ]
 
-    fixtures = bin.zip(out).map{|b,out| [ b.unpack("H*")[0], out ] }
+    fixtures = bin.zip(out).map{|b,out| [ b.hth, out ] }
     #fixtures.each{|hex,out| p [hex, out, Bitcoin.encode_base58(hex), Bitcoin.decode_base58(out)] }
     fixtures.all?{|hex,out| Bitcoin.encode_base58(hex) == out }.should == true
     fixtures.all?{|hex,out| Bitcoin.decode_base58(out) == hex }.should == true

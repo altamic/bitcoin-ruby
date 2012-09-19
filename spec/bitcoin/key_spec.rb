@@ -100,7 +100,7 @@ begin
       privkey = ["56e28a425a7b588973b5db962a09b1aca7bdc4a7268cdd671d03c52a997255dc"].pack("H*")
       pubkey =  ["04324c6ebdcf079db6c9209a6b715b955622561262cde13a8a1df8ae0ef030eaa1552e31f8be90c385e27883a9d82780283d19507d7fa2e1e71a1d11bc3a52caf3"].pack("H*")
 
-      Bitcoin::OpenSSL_EC.regenerate_key(privkey).should == [privkey, pubkey].map{|i| i.unpack("H*")[0] }
+      Bitcoin::OpenSSL_EC.regenerate_key(privkey).should == [privkey, pubkey].map{|i| i.hth }
 
       [
         ["b51386f8275d49d8d30287d7b1afa805790bdd1fe8b13d22d25928c67ea55d02", "0470305ae5278a22499980286d9c513861d89e7b7317c8b891c554d5c8fdd256b03daa0340be4104f8c84cfa98f0da8f16567fcdd3a00fd993adbbe91695671a56"],

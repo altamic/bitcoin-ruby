@@ -37,7 +37,7 @@ module Bitcoin::Wallet
       key = get_hash(@seed, @nonce)
       (n + 1).times { key = sha256(key) }
       key
-      Bitcoin::Key.new(key.unpack("H*")[0])
+      Bitcoin::Key.new(key.hth)
     end
 
     # find a nonce that leads to the privkey satisfying the target
@@ -59,7 +59,7 @@ module Bitcoin::Wallet
 
     # check if given +hash+ satisfies the difficulty target
     def check_target(hash)
-      hash.unpack("H*")[0].to_i(16) < @target
+      hash.hth.to_i(16) < @target
     end
 
     # compute a single SHA256 hash for +d+.

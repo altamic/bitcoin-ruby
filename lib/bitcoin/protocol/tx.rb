@@ -153,7 +153,7 @@ module Bitcoin
           # this IS the checksig callback, must return true/false
           hash = signature_hash_for_input(in_idx, outpoint_tx, nil, hash_type, drop_sigs, script)
           #hash = signature_hash_for_input(in_idx, nil, script_pubkey, hash_type, drop_sigs, script)
-          Bitcoin.verify_signature( hash, sig, pubkey.unpack("H*")[0] )
+          Bitcoin.verify_signature( hash, sig, pubkey.hth )
         end
       end
 

@@ -4,7 +4,7 @@ require_relative '../spec_helper'
 include Bitcoin::Wallet
 describe "Bitcoin::KeyGenerator" do
 
-  @target = ("\x00\xff" + "\x00"*30).unpack("H*")[0].to_i(16)
+  @target = ("\x00\xff" + "\x00"*30).hth.to_i(16)
 
   before do
     Bitcoin.network = :bitcoin
@@ -57,7 +57,7 @@ describe "Bitcoin::KeyGenerator" do
      "86a60cbbad2aadfba910f63dc558dd87777561297810674bec020f0f9f86f630",
      "cd1fca7ec2bddddc57fa696aefa1391bf5eeea332b79a1f29cfccfccf082a474",
     ].map{|h| [h].pack("H*")}.each_with_index do |key, i|
-      g.get_key(i).priv.should == key.unpack("H*")[0]
+      g.get_key(i).priv.should == key.hth
     end
   end
 

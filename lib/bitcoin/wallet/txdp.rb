@@ -20,7 +20,7 @@ class Bitcoin::Wallet::TxDP
   end
 
   def add_sig(in_idx, value, addr, sig)
-    sig = sig ? [[addr, sig.unpack("H*")[0]]] : []
+    sig = sig ? [[addr, sig.hth]] : []
     @inputs[in_idx] = [value, sig]
   end
 
@@ -48,8 +48,8 @@ class Bitcoin::Wallet::TxDP
     lines = []
     lines << "-----BEGIN-TRANSACTION-#{@id}".ljust(80, '-')
     size = [@tx.first.to_payload.bytesize].pack("C").ljust(2, "\x00").reverse_hth
-    lines << "_TXDIST_#{Bitcoin.network[:magic_head].unpack("H*")[0]}_#{@id}_#{size}"
-    tx = @tx.map(&:to_payload).join.unpack("H*")[0]
+    lines << "_TXDIST_#{Bitcoin.network[:magic_head].hth}_#{@id}_#{size}"
+    tx = @tx.map(&:to_payload).join.hth
     tx_str = ""; tx.split('').each_with_index{|c,i| tx_str << (i % 80 == 0 ? "\n#{c}" : c)}
     lines << tx_str.strip
     @inputs.each_with_index do |input, idx|

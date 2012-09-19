@@ -110,7 +110,7 @@ class Bitcoin::Script
         else "(opcode #{i})"
         end
       when String
-        i.unpack("H*")[0]
+        i.hth
       end
     }.join(" ")
   end
@@ -177,7 +177,7 @@ class Bitcoin::Script
     @debug = []
     @chunks.each{|chunk|
       break if invalid?
-      @debug << @stack.map{|i| i.unpack("H*") rescue i}
+      @debug << @stack.map{|i| i.hth rescue i}
       
       case chunk
       when Fixnum
@@ -196,11 +196,11 @@ class Bitcoin::Script
           raise "opcode #{name} unkown or not implemented"
         end
       when String
-        @debug << "PUSH DATA #{chunk.unpack("H*")[0]}"
+        @debug << "PUSH DATA #{chunk.hth}"
         @stack << chunk
       end
     }
-    @debug << @stack.map{|i| i.unpack("H*") rescue i }
+    @debug << @stack.map{|i| i.hth rescue i }
 
     if @script_invalid
       @stack << 0
@@ -220,7 +220,7 @@ class Bitcoin::Script
   def codehash_script(opcode)
     # CScript scriptCode(pbegincodehash, pend);
     script    = to_string(@chunks[(@codehash_start||0)...@chunks.size-@chunks.reverse.index(opcode)])
-    checkhash = Bitcoin.hash160(Bitcoin::Script.binary_from_string(script).unpack("H*")[0])
+    checkhash = Bitcoin.hash160(Bitcoin::Script.binary_from_string(script).hth)
     [script, checkhash]
   end
 
@@ -237,7 +237,7 @@ class Bitcoin::Script
     *rest, script, _, script_hash, _ = @chunks
 
     return false unless [script, script_hash].all?{|i| i.is_a?(String) }
-    return false unless Bitcoin.hash160(script.unpack("H*")[0]) == script_hash.unpack("H*")[0]
+    return false unless Bitcoin.hash160(script.hth) == script_hash.hth
     rest.delete_at(0) if rest[0] == 0
 
     script = self.class.new(to_binary(rest) + script).inner_p2sh!
@@ -290,8 +290,8 @@ class Bitcoin::Script
 
   # get the public key for this pubkey script
   def get_pubkey
-    return @chunks[0].unpack("H*")[0] if @chunks.size == 1
-    is_pubkey? ? @chunks[0].unpack("H*")[0] : nil
+    return @chunks[0].hth if @chunks.size == 1
+    is_pubkey? ? @chunks[0].hth : nil
   end
 
   # get the pubkey address for this pubkey script
@@ -301,7 +301,7 @@ class Bitcoin::Script
 
   # get the hash160 for this hash160 script
   def get_hash160
-    return @chunks[2..-3][0].unpack("H*")[0]  if is_hash160?
+    return @chunks[2..-3][0].hth  if is_hash160?
     return Bitcoin.hash160(get_pubkey)        if is_pubkey?
   end
 
@@ -317,7 +317,7 @@ class Bitcoin::Script
 
   # get the pubkey addresses for this multisig script
   def get_multisig_addresses
-    get_multisig_pubkeys.map {|p| Bitcoin::Key.new(nil, p.unpack("H*")[0]).addr}
+    get_multisig_pubkeys.map {|p| Bitcoin::Key.new(nil, p.hth).addr}
   end
 
   # get all addresses this script corresponds to (if possible)
@@ -553,7 +553,7 @@ class Bitcoin::Script
   # https://en.bitcoin.it/wiki/BIP_0017  (old OP_NOP2)
   # TODO: don't rely on it yet. add guards from wikipage too.
   def op_checkhashverify
-    unless @checkhash && (@checkhash == @stack[-1].unpack("H*")[0])
+    unless @checkhash && (@checkhash == @stack[-1].hth)
       @script_invalid = true
     end
   end
@@ -570,7 +570,7 @@ class Bitcoin::Script
   def op_checksig(check_callback)
     return invalid if @stack.size < 2
     pubkey = @stack.pop
-    drop_sigs      = [@stack[-1].unpack("H*")[0]]
+    drop_sigs      = [@stack[-1].hth]
     sig, hash_type = parse_sig(@stack.pop)
 
     if @chunks.include?(OP_CHECKHASHVERIFY)
@@ -610,7 +610,7 @@ class Bitcoin::Script
   # TODO: take global opcode count
   def op_checkmultisig(check_callback)
     n_pubkeys = @stack.pop
-    return invalid  unless (0..20).include?(n_pubkeys)
+    return invalid  unless n_pubkeys.between?(0,20)
     return invalid  unless @stack.last(n_pubkeys).all?{|e| e.is_a?(String) && e != '' }
     #return invalid  if ((@op_count ||= 0) += n_pubkeys) > 201
     pubkeys = @stack.pop(n_pubkeys)
@@ -619,7 +619,7 @@ class Bitcoin::Script
     return invalid  unless (0..n_pubkeys).include?(n_sigs)
     return invalid  unless @stack.last(n_sigs).all?{|e| e.is_a?(String) && e != '' }
     sigs = (drop_sigs = @stack.pop(n_sigs)).map{|s| parse_sig(s) }
-    drop_sigs.map!{|i| i.unpack("H*")[0] }
+    drop_sigs.map!{|i| i.hth }
 
     @stack.pop if @stack[-1] == '' # remove OP_NOP from stack
 

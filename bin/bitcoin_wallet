@@ -279,7 +279,7 @@ when "sign"
     sig_hash = tx.signature_hash_for_input(i, prev_tx)
     sig = key.sign(sig_hash)
     script_sig = Bitcoin::Script.to_pubkey_script_sig(sig, [key.pub].pack("H*"))
-    script_sig.unpack("H*")[0]
+    script_sig.hth
   end
   File.open(ARGV[0], "w") {|f| f.write txdp.serialize }
 

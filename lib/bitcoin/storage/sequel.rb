@@ -156,7 +156,7 @@ module Bitcoin::Storage::Backends
         store_addr(txout_id, script.get_hash160)
       elsif script.is_multisig?
         script.get_multisig_pubkeys.map do |pubkey|
-          store_addr(txout_id, Bitcoin.hash160(pubkey.unpack("H*")[0]))
+          store_addr(txout_id, Bitcoin.hash160(pubkey.hth))
         end
       end
       txout_id
